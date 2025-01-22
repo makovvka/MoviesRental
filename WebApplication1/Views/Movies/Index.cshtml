@@ -1,0 +1,70 @@
+﻿@model List<Movie>
+@{
+}
+<h2 class="text-center mb-5">List of Movies</h2>
+
+<div class="row">
+	<div class="col-md-6">
+		<form class="d-flex" asp-action="Index" asp-controller="Movies">
+			<input name="searchString" class="form-control me-1" type="search" placeholder="Search" aria-label="Search">
+			<button class="btn btn-dark" type="submit">Search by name</button>
+		</form>
+	</div>
+	<div class="col-md-6">
+		<a asp-action="Index" class="text-dark">Back to Full List</a>
+	</div>
+</div>
+@{
+	if(User.IsInRole("ADMIN"))
+	{
+		<div class="row mb-5">
+			<div class="col">
+				<a class ="btn btn-primary" asp-controller="movies" asp-action="Create">New Movie</a>
+			</div>
+			<div class="col">
+			</div>
+		</div>
+}
+}
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>Id</th>
+			<th>Title</th>
+			<th>Description</th>
+			<th>Author</th>
+			<th>Genre</th>
+			<th>Price</th>
+			<th>Created At</th>
+			<th>Action</th>
+		</tr>
+	</thead>
+
+	<tbody>
+		@foreach (var movie in Model)
+		{
+			<tr>
+				<td>@movie.Id</td>
+				<td>@movie.Title</td>
+				<td>@movie.Description</td>
+				<td>@movie.Author</td>
+				<td>@movie.Genre</td>
+				<td>@(movie.Price)$</td>
+				<td><img src="/photos/@movie.ImageFileName" width="100" /></td>
+				<td>@movie.CreatedAt.ToString("MM/dd/yyyy")</td>
+				@{
+					if(User.IsInRole("ADMIN"))
+					{
+				<td style="white-space:nowrap">
+					<a class="btn btn-primary btn-sm" asp-controller="Movies" asp-action="Edit"
+						asp-route-id="@movie.Id">Edit</a>
+					<a class="btn btn-primary btn-sm" asp-controller="Movies" asp-action="Delete"
+					   asp-route-id="@movie.Id">Delete</a>
+				</td>
+				}
+				}
+			</tr>
+		}
+	</tbody>
+</table>
